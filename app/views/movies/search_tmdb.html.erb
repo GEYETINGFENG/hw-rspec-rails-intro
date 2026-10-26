@@ -3,7 +3,12 @@
 
 
 <h2>Search in TMDb</h2>
-<%# Part 5 here %>
+<% flash.each do |key, value| %>
+  <div class="alert alert-<%= key %> alert-dismissible fade show" role="alert">
+    <%= value %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+<% end %>
 
 <div class="search-container">
 <%= link_to 'Back to movie list', movies_path, class: 'btn btn-primary col-2' %>
@@ -26,3 +31,34 @@
   
 <% end %>
 </div>
+
+<% if @movies.present? %>
+  <table class="table table-striped col-md-12 mt-3" id="search_movies">
+    <thead>
+      <tr>
+        <th>Movie Title</th>
+        <th>Rating</th>
+        <th>Release Date</th>
+        <th>Add to RottenPotatoes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @movies.each do |movie| %>
+        <tr>
+          <td><%= movie.title %></td>
+          <td><%= movie.rating %></td>
+          <td><%= movie.release_date&.to_date %></td>
+          <td>
+            <%= form_tag add_movie_path, method: :post do %>
+              <%= hidden_field_tag 'title', movie.title %>
+              <%= hidden_field_tag 'rating', movie.rating %>
+              <%= hidden_field_tag 'release_date', movie.release_date&.to_date %>
+              <%= hidden_field_tag 'description', movie.description %>
+              <%= submit_tag 'Add Movie', class: 'btn btn-success btn-sm' %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

@@ -46,10 +46,37 @@ class MoviesController < ApplicationController
   end
 
   def search_tmdb
-    @movies = Movie.find_in_tmdb(params[:search_terms])
+    # First visit to /search (form not submitted yet): just show the form
+    return unless search_submitted?
+
+    if params[:title].blank?
+      flash.now[:danger] = 'Please fill in all required fields!'
+      return
+    end
+
+    @movies = Movie.find_in_tmdb(search_params)
+    flash.now[:danger] = 'No movies found with given parameters!' if @movies.blank?
+  end
+
+  def add_movie
+    @movie = Movie.create!(params.permit(:title, :release_date, :rating, :description))
+    flash[:success] = "#{@movie.title} was successfully added to RottenPotatoes."
+    redirect_to search_tmdb_path
   end
 
   private
+
+  def search_submitted?
+    params.key?(:title) || params.key?(:release_year) || params.key?(:language)
+  end
+
+  def search_params
+    { title: params[:title], release_year: params[:release_year], language: params[:language] }
+  end
+
+  def movie_params
+    params.require(:movie).permit(:title, :rating, :description, :release_date)
+  end
 
   def force_index_redirect
     return unless !params.key?(:ratings) || !params.key?(:sort_by)

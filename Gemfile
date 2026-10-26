@@ -34,4 +34,5 @@ gem 'faraday', '1.8.0'
 group :test do
   gem 'rails-controller-testing'
   gem 'guard-rspec'
+  gem 'webmock'
 end
