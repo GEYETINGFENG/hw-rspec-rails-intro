@@ -28,3 +28,10 @@ group :production do
   gem 'pg', '~> 0.2'
   gem 'rails_12factor'
 end
+
+gem 'faraday', '1.8.0'
+
+group :test do
+  gem 'rails-controller-testing'
+  gem 'guard-rspec'
+end
