@@ -1,4 +1,7 @@
 class Movie < ActiveRecord::Base
+  def self.find_in_tmdb(search_terms)
+  end
+
   def self.all_ratings
     %w[G PG PG-13 R]
   end
