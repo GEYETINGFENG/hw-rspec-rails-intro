@@ -14,10 +14,12 @@ class Movie < ActiveRecord::Base
 
     results = JSON.parse(response.body)['results'] || []
     results = results.select { |m| m['original_language'] == 'en' } if english_only
-    results.map do |m|
+    movies = results.map do |m|
       Movie.new(title: m['title'], release_date: m['release_date'],
                 rating: 'R', description: m['overview'])
     end
+    # leave out movies that are already saved in RottenPotatoes
+    movies.reject { |movie| Movie.exists?(title: movie.title, release_date: movie.release_date) }
   end
 
   def self.all_ratings
