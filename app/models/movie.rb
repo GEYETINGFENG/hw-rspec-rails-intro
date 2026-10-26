@@ -1,5 +1,6 @@
 class Movie < ActiveRecord::Base
   def self.find_in_tmdb(search_terms)
+    Faraday.get(search_terms)
   end
 
   def self.all_ratings
